@@ -334,3 +334,5 @@ ROI negatif
 Hybrid mungkin punya edge. Statistik gagal sendiri, AI mungkin punya look-ahead, tapi ensemble bisa lebih baik. Kunci: uji look-ahead dulu, live test 100 laga, buang sumber jelek, ensemble ulang. Kalau tetap negatif, berhenti. Jangan tuning. Jangan cari kombinasi ajaib. Fokus: uji, buang, ensemble, ulangi.
 
 ---
+15.
+Plan yang sudah di Proses harus Buat Plan.MD agar lebih mudah saat melanjutkan Prjocet
