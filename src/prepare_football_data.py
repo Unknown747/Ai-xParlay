@@ -8,8 +8,9 @@ import json
 import sys
 import tempfile
 from pathlib import Path
-from typing import Any
+from typing import Any, Iterable
 
+from src.config import LEAGUES, SEASONS
 from src.inspect_football_data import (
     ALIASES,
     DEFAULT_CSV,
@@ -62,6 +63,8 @@ def prepare_csv(
     *,
     max_rows: int | None = None,
     encoding: str = "utf-8-sig",
+    leagues: Iterable[str] | None = None,
+    seasons: Iterable[str] | None = None,
 ) -> dict[str, Any]:
     """Write a normalized match CSV while keeping memory use independent of row count."""
     source = Path(csv_path)
@@ -111,6 +114,9 @@ def prepare_csv(
             inferred_results = 0
             result_score_mismatches = 0
             scan_limit_reached = False
+            rows_out_of_scope = 0
+            league_filter = {c.strip().upper() for c in leagues} if leagues else set()
+            season_filter = {c.strip() for c in seasons} if seasons else set()
 
             with tempfile.NamedTemporaryFile(
                 mode="w",
@@ -170,6 +176,11 @@ def prepare_csv(
                         or not (league_code or league_name)
                     ):
                         skipped_missing_identity += 1
+                        continue
+                    if (league_filter and league_code.upper() not in league_filter) or (
+                        season_filter and season not in season_filter
+                    ):
+                        rows_out_of_scope += 1
                         continue
 
                     raw_home_score = values.get("home_goals", "")
@@ -245,6 +256,9 @@ def prepare_csv(
         "full_file_scan": not scan_limit_reached,
         "rows_written": rows_written,
         "rows_skipped_missing_identity": skipped_missing_identity,
+        "rows_out_of_scope": rows_out_of_scope,
+        "league_filter": sorted(league_filter),
+        "season_filter": sorted(season_filter),
         "missing_dates": missing_dates,
         "invalid_dates": invalid_dates,
         "missing_home_teams": missing_home_teams,
@@ -288,7 +302,17 @@ def _build_parser() -> argparse.ArgumentParser:
         default="utf-8-sig",
         help="Encoding CSV sumber (default: utf-8-sig).",
     )
+    parser.add_argument("--leagues", default=",".join(LEAGUES),
+                        help="Kode liga dipisah koma (default: src/config.py).")
+    parser.add_argument("--seasons", default=",".join(SEASONS),
+                        help="Kode musim dipisah koma (default: src/config.py).")
+    parser.add_argument("--all", action="store_true",
+                        help="Nonaktifkan filter liga/musim.")
     return parser
+
+
+def _split(value: str) -> tuple[str, ...]:
+    return tuple(item.strip() for item in value.split(",") if item.strip())
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -299,6 +323,8 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             max_rows=args.max_rows,
             encoding=args.encoding,
+            leagues=None if args.all else _split(args.leagues),
+            seasons=None if args.all else _split(args.seasons),
         )
     except (
         DatasetFormatError,

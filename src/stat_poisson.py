@@ -27,9 +27,7 @@ PRIOR_GPM: dict[str, float] = {
     "E1": 2.83,   # Championship
     "N1": 3.74,   # Eredivisie
     "P1": 2.72,   # Primeira Liga
-    "B1": 2.97,   # Belgium
     "T1": 2.92,   # Turkey
-    "SC0": 2.61,  # Scottish Premiership
 }
 
 

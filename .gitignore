@@ -1,0 +1,5 @@
+keys.env
+cache/
+data/historis/*.csv
+data/historis/*.bak
+data/hasil/
