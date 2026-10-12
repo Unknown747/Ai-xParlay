@@ -50,30 +50,30 @@ proyek-baru/
 
 3. FASE
 
-Fase 1: Data (1-2 hari)
+Fase 1: Data
 
 · Fetch football-data.co.uk: 11 liga × 5 musim
 · Fetch Understat: 5 liga × 5 musim
 · Output: ~15.000 laga (odds + hasil), ~9.000 laga (xG)
 
-Fase 2: Model Statistik (1 hari)
+Fase 2: Model Statistik
 
 · stat_poisson.py: input 10 laga terakhir, output p_over/p_home/p_draw/p_away/p_btts
 · stat_xg.py: input xG 10 laga terakhir, output sama
 · Walk-forward
 
-Fase 3: AI (1 hari)
+Fase 3: AI 
 
 · ai_gemini.py: prompt → pick + confidence
 · ai_groq.py: sama
 · Temperature = 0, prompt sama untuk semua AI
 
-Fase 4: Ensemble (1 hari)
+Fase 4: Ensemble
 
 · Gabung semua sumber
 · Filter berlapis: statistik filter → AI konfirmasi → taruhan
 
-Fase 5: Backtest / Live (30 hari)
+Fase 5: Backtest 
 
 · Uji look-ahead dulu (20 laga historis)
 · Kalau AI tidak tahu hasil → backtest 1000+ laga
