@@ -5,21 +5,22 @@ Dokumen ini mengikuti spesifikasi di `READ.md` dan menjadi catatan utama progres
 ## Aturan pembaruan progres
 
 - Perbarui checklist ini setiap kali satu poin mulai dikerjakan atau selesai.
-- Tandai `[x]` hanya jika hasil poin tersebut sudah dibuat dan diperiksa; jangan menandai rencana sebagai hasil.
+- Gunakan `[~]` untuk poin yang sedang dikerjakan dan `[x]` hanya setelah hasilnya dibuat dan diperiksa; jangan menandai rencana sebagai hasil.
 - Jika pekerjaan terhenti, catat kendala dan kebutuhan keputusan di bagian **Catatan dan kendala**.
 - Setelah perubahan progres, perbarui ringkasan status di bawah.
 
 ## Status saat ini
 
-- **Tahap:** Perencanaan
+- **Tahap:** 0 — Persiapan (menentukan jalur akses data)
 - **Progres implementasi:** 0%
-- **Sudah dilakukan:** `READ.md` dibaca dan dirangkum menjadi rencana ini.
+- **Sudah dilakukan:** `READ.md` dibaca; sumber data ditinjau; rencana progres dibuat.
 - **Belum dilakukan:** Belum ada kode Python, data, model, atau pengujian yang dibuat.
+- **Asumsi awal untuk dikonfirmasi:** 11 liga pada `READ.md`, lima musim selesai terbaru (2021/22–2025/26), dan pasar O/U 2.5, 1x2, serta BTTS.
 
 ## Tahap 0 — Persiapan proyek
 
 - [x] Baca `READ.md` dan susun rencana progres.
-- [ ] Tentukan liga, musim, pasar, dan format keluaran untuk versi pertama.
+- [~] Tentukan liga, musim, pasar, dan format keluaran untuk versi pertama; asumsi awal tercatat di atas, perlu konfirmasi jalur data.
 - [ ] Siapkan struktur proyek Python tanpa mengubah stack atau memindahkan proyek.
 - [ ] Siapkan dependensi dan cara menjalankan perintah proyek.
 - [ ] Pastikan konfigurasi rahasia/API key tidak disimpan di Git.
@@ -28,7 +29,8 @@ Dokumen ini mengikuti spesifikasi di `READ.md` dan menjadi catatan utama progres
 
 ## Tahap 1 — Pengambilan dan pemeriksaan data
 
-- [ ] Ambil hasil pertandingan dan odds dari football-data.co.uk; target rancangan: 11 liga × 5 musim.
+- [ ] Putuskan sumber dan cara akses yang mengizinkan penggunaan yang direncanakan.
+- [ ] Ambil hasil pertandingan dan odds dari football-data.co.uk hanya jika cara penggunaan yang dipilih mengizinkannya; target rancangan: 11 liga × 5 musim.
 - [ ] Ambil data xG Understat; target rancangan: 5 liga × 5 musim.
 - [ ] Simpan data historis sebagai CSV di `data/historis/` dan xG sebagai JSON di `data/understat/`.
 - [ ] Tambahkan cache untuk menghindari pengambilan data berulang yang tidak perlu.
@@ -103,6 +105,7 @@ Dokumen ini mengikuti spesifikasi di `READ.md` dan menjadi catatan utama progres
 ## Catatan dan kendala
 
 - Belum ada kode aplikasi, dataset, maupun workflow yang dijalankan.
+- Halaman resmi football-data.co.uk menyatakan penggunaan ditujukan bagi individu pribadi dan bukan untuk penggunaan komersial atau produk data-training yang memakai bot/scraper/AI. Pengambilan otomatis dan pengiriman data ke AI ditahan sampai jalur penggunaan disepakati.
 - Integrasi Gemini/Groq memerlukan API key dan pemeriksaan batas pemakaian ketika tahap AI dimulai.
 - Klaim “akurasi sekitar 50% berarti AI tidak tahu hasil” pada `READ.md` tidak cukup sebagai bukti bahwa kebocoran data tidak ada. Validasi harus memeriksa alur data dan waktu prediksi secara langsung.
 - Sumber data gratis tetap perlu diperiksa ketersediaan, format, batas akses, dan ketentuan penggunaannya saat implementasi.
