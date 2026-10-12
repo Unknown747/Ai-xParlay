@@ -1,5 +1,5 @@
 # Ai-xParlay
-Hanya untuk prediksi Persinal Use
+Hanya untuk prediksi Personal Use
 
 
 ---
