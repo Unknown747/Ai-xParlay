@@ -1,4 +1,5 @@
 # Ai-xParlay
+Hanya untuk prediksi Persinal Use
 
 
 ---
