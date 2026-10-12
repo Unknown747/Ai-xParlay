@@ -11,44 +11,56 @@ Dokumen ini mengikuti spesifikasi di `READ.md` dan menjadi catatan utama progres
 
 ## Status saat ini
 
-- **Tahap:** 0 — Persiapan (menentukan jalur akses data)
-- **Progres implementasi:** 0%
-- **Sudah dilakukan:** `READ.md` dibaca; sumber data ditinjau; rencana progres dibuat.
-- **Belum dilakukan:** Belum ada kode Python, data, model, atau pengujian yang dibuat.
-- **Asumsi awal untuk dikonfirmasi:** 11 liga pada `READ.md`, lima musim selesai terbaru (2021/22–2025/26), dan pasar O/U 2.5, 1x2, serta BTTS.
+- **Tahap:** Tahap 2 — model Poisson pertama selesai; model xG dan backtest belum dimulai.
+- **Progres implementasi:** Fondasi, penyiapan CSV, dan prediksi Poisson untuk satu laga selesai serta diverifikasi.
+- **Sudah dilakukan:** CSV penuh dari tautan pengguna dipindai dan dinormalisasi di direktori sementara; 13 tes otomatis serta satu prediksi uji dari seluruh dataset lulus.
+- **Belum dilakukan:** File sumber/hasil belum disimpan ke workspace; model xG, AI, ensemble, dan evaluasi backtest belum dibuat.
+- **Cakupan CSV:** 107.408 baris, 218 kolom, 14 kode liga, 22 musim (0506–2627); musim 2627 masih berjalan.
+- **Kualitas awal:** 0 tanggal/skor tidak valid, 0 fixture duplikat, 0 hasil yang tidak cocok dengan skor; dari 106 baris tanpa skor, 103 baris kosong tanpa tanggal/tim dan 3 fixture valid.
+- **Pasar awal:** O/U 2.5, 1x2, BTTS, mengikuti `READ.md`.
+- **Ukuran file sumber:** 55.361.364 byte (sekitar 55,4 MB); pemindaian memakai file sementara yang sudah dihapus setelahnya.
+- **CSV ringkas:** 107.305 baris × 29 kolom; 11.444.234 byte (sekitar 11,4 MB). Tidak disimpan ke workspace.
 
 ## Tahap 0 — Persiapan proyek
 
 - [x] Baca `READ.md` dan susun rencana progres.
-- [~] Tentukan liga, musim, pasar, dan format keluaran untuk versi pertama; asumsi awal tercatat di atas, perlu konfirmasi jalur data.
-- [ ] Siapkan struktur proyek Python tanpa mengubah stack atau memindahkan proyek.
-- [ ] Siapkan dependensi dan cara menjalankan perintah proyek.
-- [ ] Pastikan konfigurasi rahasia/API key tidak disimpan di Git.
+- [x] Tentukan jalur input awal: impor CSV lokal dari pengguna, bukan scraper football-data.co.uk.
+- [x] Tetapkan cakupan versi pertama: pertahankan semua liga/musim di CSV; pasar mengikuti `READ.md`.
+- [x] Siapkan struktur proyek Python dan perintah inspeksi tanpa dependensi pihak ketiga.
+- [x] Dokumentasikan lokasi CSV, perintah menjalankan, dan cara menjaga file data besar agar tidak masuk Git.
+- [x] Tahap impor awal tidak memerlukan API key.
 
-**Selesai jika:** ruang lingkup versi pertama jelas, proyek bisa dijalankan, dan rahasia dikelola dengan aman.
+**Selesai:** proyek Python dan perintah inspeksi dapat dijalankan; tahap ini memakai standard library dan tidak memerlukan rahasia.
 
 ## Tahap 1 — Pengambilan dan pemeriksaan data
 
-- [ ] Putuskan sumber dan cara akses yang mengizinkan penggunaan yang direncanakan.
-- [ ] Ambil hasil pertandingan dan odds dari football-data.co.uk hanya jika cara penggunaan yang dipilih mengizinkannya; target rancangan: 11 liga × 5 musim.
+- [x] Pilih cara akses awal: CSV lokal yang diberikan pengguna; tidak membuat scraper football-data.co.uk.
+- [x] Buat pemeriksa CSV streaming untuk file besar, cakupan liga/musim, dan kualitas baris.
+- [x] Pindai penuh CSV yang diberikan melalui file sementara tanpa menyimpan salinan 55 MB di proyek atau Git.
+- [x] Siapkan CSV ringkas dengan kolom hasil, tanggal, tim, liga, musim, dan odds yang berguna untuk tahap model.
+- [x] Pastikan Git mengabaikan CSV sumber dan hasil ringkas.
+- [ ] Pilih atau tinjau izin sumber data untuk xG Understat sebelum mengintegrasikannya.
+- [x] Tahan otomatisasi pengambilan data eksternal sampai ketentuan penggunaan mengizinkannya.
 - [ ] Ambil data xG Understat; target rancangan: 5 liga × 5 musim.
-- [ ] Simpan data historis sebagai CSV di `data/historis/` dan xG sebagai JSON di `data/understat/`.
-- [ ] Tambahkan cache untuk menghindari pengambilan data berulang yang tidak perlu.
-- [ ] Periksa kolom, nilai kosong, duplikat, tanggal, tim, dan kecocokan antar-sumber.
-- [ ] Catat cakupan data aktual; angka target di `READ.md` bukan hasil yang sudah tercapai.
+- [x] Gunakan file CSV lokal yang sama sebagai sumber; jangan menggandakan file 55 MB di Git.
+- [x] Tidak membuat cache unduhan: masukan awal adalah file lokal yang diproses streaming.
+- [x] Periksa kolom, nilai kosong, duplikat, tanggal, tim, dan kecocokan skor/hasil.
+- [x] Catat cakupan data aktual; angka target di `READ.md` bukan hasil yang sudah tercapai.
 
-**Selesai jika:** data dapat diambil atau dimuat ulang, lolos pemeriksaan kualitas dasar, dan cakupannya terdokumentasi.
+**Selesai untuk CSV hasil/odds:** file dapat diperiksa dan dinormalisasi secara streaming; cakupan serta kualitasnya dilaporkan. Integrasi xG Understat belum dimulai.
 
 ## Tahap 2 — Model statistik
 
-- [ ] Implementasikan model Poisson untuk gol dan pasar yang didukung.
+- [x] Implementasikan model Poisson untuk gol dan pasar yang didukung.
 - [ ] Implementasikan model berbasis xG Understat.
-- [ ] Terapkan parameter awal dari `READ.md`: `K=6`, `LAST_N=10`, `MIN_N=3`, `W_PRIOR=100`, `HOME_SHARE=0.50`, serta prior gol per liga.
-- [ ] Hasilkan probabilitas untuk Over/Under 2.5, 1x2, dan BTTS sesuai ketersediaan data.
-- [ ] Terapkan pengujian walk-forward: setiap prediksi hanya memakai pertandingan yang terjadi sebelumnya.
-- [ ] Uji perhitungan probabilitas, termasuk rentang nilai dan konsistensi jumlah probabilitas.
+- [x] Terapkan parameter awal dari `READ.md`: `K=6`, `LAST_N=10`, `MIN_N=3`, `W_PRIOR=100`, `HOME_SHARE=0.50`, serta prior gol per liga.
+- [x] Hasilkan probabilitas untuk Over/Under 2.5, 1x2, dan BTTS.
+- [x] Pastikan prediksi satu laga hanya memakai pertandingan bertanggal sebelum prediksi; pertandingan di tanggal yang sama dikecualikan.
+- [x] Uji rentang dan konsistensi probabilitas serta perilaku saat data tim belum mencukupi.
 
-**Selesai jika:** kedua model menghasilkan probabilitas yang dapat diuji tanpa kebocoran data masa depan.
+**Status tahap:** model Poisson awal selesai; model xG dan backtest masih tertunda.
+
+**Selesai jika:** model Poisson dan xG tersedia dan menghasilkan probabilitas tanpa memakai data masa depan.
 
 ## Tahap 3 — Integrasi AI (opsional sampai kredensial tersedia)
 
@@ -104,7 +116,13 @@ Dokumen ini mengikuti spesifikasi di `READ.md` dan menjadi catatan utama progres
 
 ## Catatan dan kendala
 
-- Belum ada kode aplikasi, dataset, maupun workflow yang dijalankan.
+- Belum ada xG, ensemble, AI, atau backtest. File dataset sumber/hasil tidak disimpan permanen di workspace; alat yang dibuat berupa perintah Python satu kali dari terminal, bukan workflow server.
+- File yang diberikan memiliki header seperti `Date`, `HomeTeam`, `AwayTeam`, `FTHG`, `FTAG`, `FTR`, `League`, `LeagueCode`, dan `Season`, beserta banyak kolom odds/statistik serta kolom tambahan. Pemeriksa perlu streaming dan hanya mewajibkan kolom yang dibutuhkan.
+- File penuh berisi 14 kode liga (`D1`, `D2`, `E0`, `E1`, `F1`, `F2`, `G1`, `I1`, `I2`, `N1`, `P1`, `SP1`, `SP2`, `T1`) dan musim berjalan `2627`. Jangan mengasumsikan cakupannya persis 11 liga × 5 musim.
+- Dari 106 baris mentah tanpa skor penuh, 103 adalah baris kosong tanpa tanggal/tim dan dilewati; 3 fixture yang dapat dikenali dipertahankan tanpa hasil.
+- CSV ringkas berhasil diuji penuh: 55.361.364 byte menjadi 11.444.234 byte, tanpa hasil yang tidak cocok atau fixture duplikat. File sementara dihapus setelah verifikasi.
+- Model Poisson menghasilkan probabilitas pada data uji menggunakan 8.030 hasil liga sebelum tanggal prediksi dan 10 laga venue terakhir per tim. Ini uji fungsi, bukan bukti akurasi atau ROI.
+- Musim `2627` belum selesai; jangan gabungkan hasilnya dengan musim penuh tanpa menandainya sebagai data berjalan.
 - Halaman resmi football-data.co.uk menyatakan penggunaan ditujukan bagi individu pribadi dan bukan untuk penggunaan komersial atau produk data-training yang memakai bot/scraper/AI. Pengambilan otomatis dan pengiriman data ke AI ditahan sampai jalur penggunaan disepakati.
 - Integrasi Gemini/Groq memerlukan API key dan pemeriksaan batas pemakaian ketika tahap AI dimulai.
 - Klaim “akurasi sekitar 50% berarti AI tidak tahu hasil” pada `READ.md` tidak cukup sebagai bukti bahwa kebocoran data tidak ada. Validasi harus memeriksa alur data dan waktu prediksi secara langsung.

@@ -1,1 +1,2 @@
 - [Plan progress tracking](plan-progress-tracking.md) — keep `Plan.MD` current as each project item starts or is completed.
+- [Local football data handling](local-football-data.md) — retain all seasons from the user's local CSV; stream processing and keep source/output CSVs out of Git.

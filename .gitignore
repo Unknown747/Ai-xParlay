@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+.venv/
+.cache/
+
+# Imported datasets are local inputs; do not commit large source files.
+data/historis/*.csv
+data/understat/*.json
