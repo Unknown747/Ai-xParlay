@@ -245,7 +245,7 @@ File (hapus setelah selesai)
 
 ---
 
-10. EVALUASI (setelah 100 laga)
+10. EVALUASI
 
 ```
 1. ROI per sumber:
