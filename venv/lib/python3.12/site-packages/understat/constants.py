@@ -1,6 +1,0 @@
-BASE_URL = "https://understat.com"
-STATS_URL = f"{BASE_URL}/getStatData"
-LEAGUE_URL = f"{BASE_URL}/getLeagueData/{{}}/{{}}"
-PLAYER_URL = f"{BASE_URL}/getPlayerData/{{}}"
-TEAM_URL = f"{BASE_URL}/getTeamData/{{}}/{{}}"
-MATCH_URL = f"{BASE_URL}/getMatchData/{{}}"
